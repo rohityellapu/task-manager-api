@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const mongooose = require('mongoose');
 
-mongooose.connect('mongodb://localhost:27017/taskManager', (err) => err ? console.log(err) : console.log('Database Connected'))
+mongooose.connect(process.env.DB_URL, (err) => err ? console.log(err) : console.log('Database Connected'))
 const userRoutes = require('./routes/user');
 const todoRoutes = require('./routes/todo');
 const PORT = 3005;
