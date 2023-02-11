@@ -58,11 +58,33 @@ router.post('/register', async (req, res) => {
     try {
         let oldUser = await Registration.findOne({ email: email }).populate('events.ticket');
         if (oldUser) {
-            res.status(409).json({
-                status: "Failed",
-                message: "User already exists with that email",
-                oldUser
-            })
+            let alreadyRegistered = oldUser.events.every((e) => e.event == event._id)
+            if (alreadyRegistered) {
+                res.status(409).json({
+                    status: "Failed",
+                    message: "User already exists with that email",
+                    oldUser
+                })
+            }
+            else {
+                let eve = await Event.findOne({ _id: event._id })
+                let newNumber = new ShortUniqueId({ length: 6 })()
+                let newTicket = new Ticket({ number: newNumber, event: event._id })
+
+                let newEve = { event: event._id, ticket: newTicket._id };
+                oldUser.events.push(newEve);
+                newTicket.registrant = oldUser._id;
+                eve.registrations.push(oldUser._id)
+
+                await eve.save()
+                await newTicket.save();
+                await oldUser.save();
+                res.json({
+                    message: 'Success',
+                    oldUser,
+                    newTicket
+                })
+            }
         } else {
             let eve = await Event.findOne({ _id: event._id })
             let newNumber = new ShortUniqueId({ length: 6 })()
