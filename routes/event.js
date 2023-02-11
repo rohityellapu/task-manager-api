@@ -58,15 +58,8 @@ router.post('/register', async (req, res) => {
     try {
         let oldUser = await Registration.findOne({ email: email }).populate('events.ticket');
         if (oldUser) {
-            let alreadyRegistered = oldUser.events.every((e) => e.event == event._id)
+            let alreadyRegistered = oldUser.events.every((e) => e.event != event._id)
             if (alreadyRegistered) {
-                res.status(409).json({
-                    status: "Failed",
-                    message: "User already exists with that email",
-                    oldUser
-                })
-            }
-            else {
                 let eve = await Event.findOne({ _id: event._id })
                 let newNumber = new ShortUniqueId({ length: 6 })()
                 let newTicket = new Ticket({ number: newNumber, event: event._id })
@@ -83,6 +76,14 @@ router.post('/register', async (req, res) => {
                     message: 'Success',
                     oldUser,
                     newTicket
+                })
+
+            }
+            else {
+                res.status(409).json({
+                    status: "Failed",
+                    message: "User already exists with that email",
+                    oldUser
                 })
             }
         } else {
