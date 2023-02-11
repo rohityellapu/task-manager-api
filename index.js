@@ -7,7 +7,7 @@ mongooose.connect(process.env.DB_URL, (err) => err ? console.log(err) : console.
 const userRoutes = require('./routes/user');
 const todoRoutes = require('./routes/todo');
 const eventRoutes = require('./routes/event');
-const PORT = 3005;
+const PORT = process.env.PORT || 3005;
 const cors = require('cors')
 
 var whitelist = ['https://event-management-byrohit.onrender.com',
