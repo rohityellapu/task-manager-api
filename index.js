@@ -2,16 +2,18 @@ const express = require('express')
 const app = express()
 const mongooose = require('mongoose');
 require('dotenv').config();
-mongooose.connect(process.env.DB_URL, (err) => err ? console.log(err) : console.log('Database Connected'))
+mongooose.connect(process.env.DB_URL || 'mongodb://localhost/todo-apis', (err) => err ? console.log(err) : console.log('Database Connected'))
 
 const userRoutes = require('./routes/user');
 const todoRoutes = require('./routes/todo');
 const eventRoutes = require('./routes/event');
-const PORT = 3005;
+const patientRoutes = require('./routes/patient')
+const PORT = process.env.PORT || 3005;
 const cors = require('cors')
 
 var whitelist = ['https://event-management-byrohit.onrender.com',
     'https://rohits-todo.onrender.com',
+    'https://main--effervescent-pavlova-322418.netlify.app',
     'http://localhost:3000'
 ]
 var corsOptions = {
@@ -28,4 +30,8 @@ app.use(cors(corsOptions))
 app.use('/', userRoutes)
 app.use('/', todoRoutes);
 app.use('/event', eventRoutes)
+app.use('/patient', patientRoutes)
+
+
+
 app.listen(PORT, () => console.log('Server is on PORT', PORT));
