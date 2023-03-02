@@ -13,7 +13,7 @@ const cors = require('cors')
 
 var whitelist = ['https://event-management-byrohit.onrender.com',
     'https://rohits-todo.onrender.com',
-    'https://main--effervescent-pavlova-322418.netlify.app',
+    'https://haloc-patient-crud.netlify.app',
     'http://localhost:3000'
 ]
 var corsOptions = {
